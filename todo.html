@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/todo.css" />
+  </head>
+  <body>
+    <div class="todo">
+      <h2>Hi</h2>
+      <form action="">
+        <div class="enter-input">
+          <input type="text" name="" placeholder="Enter todo" id="" />
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+
+      <div class="list">
+        <form action="">
+          <div class="task">
+            <input type="checkbox" name="done" id="" />
+
+            <p>Fetch water</p>
+
+            <div class="delete">
+              <img
+                src="assets/images/delete_24dp_FF9292_FILL0_wght400_GRAD0_opsz24 (1).svg"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <div class="task">
+            <input type="checkbox" name="done" id="" />
+
+            <p>Cook food</p>
+
+            <div class="delete">
+              <img
+                src="assets/images/delete_24dp_FF9292_FILL0_wght400_GRAD0_opsz24 (1).svg"
+                alt=""
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="assets/js/todo.js"></script>
+    <script>
+      let nameOfUser = document.querySelector(".todo h2");
+
+      let enterName = prompt("Enter your name: ");
+
+      nameOfUser.textContent += " "+enterName;
+    </script>
+  </body>
+</html>

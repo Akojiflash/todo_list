@@ -1,7 +1,23 @@
 <?php
-header('Access-Control-Allow-Origin: *'); // Adjust for production
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Authorization, Content-Type');
+
+// CORS headers - must be sent before any output
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Max-Age: 86400");
+    http_response_code(200);
+    exit();
+}
+
+// CORS headers for other requests
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json; charset=UTF-8");
+
+
+
 require_once "../vendor/autoload.php";
 require_once "../config/config.php";
 
@@ -34,6 +50,7 @@ if ($part[2] === "api" && $part[3] === "register") {
     $userController = new \Controllers\User($userService);
 
     $userController->processRequest($method, $part[3]);
+    
     exit();
 }else if($part[2] === "api" && $part[3] === "login"){
     $userModel = new \Models\User($database);
@@ -48,6 +65,10 @@ if ($part[2] === "api" && $part[3] === "register") {
 
 }
 
+else if($part[2]=== "api" && $part[3]=== "refresh-token"){
+    
+
+}
 
 
 http_response_code(404);

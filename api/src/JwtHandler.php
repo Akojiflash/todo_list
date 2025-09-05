@@ -11,6 +11,7 @@ class JwtHandler
 
     private $issuer = "http://localhost/todo_list/public/api/index.php";
     private $accessTokenExpiration = 3600; // 1 hour
+    private $refreshTokenExpiration = 604800; // 7 days
 
     function __construct(private Firebase\JWT\JWT $jwt,) {}
 
@@ -33,6 +34,20 @@ class JwtHandler
         return $this->jwt::encode($payload, $this->secretkey, $this->alg);
     }
 
+    public function generateRefreshToken($userId): string
+    {
+
+        $issuedAt = time();
+        $payload = [
+            'iss' => $this->issuer,
+            'iat' => $issuedAt,
+            'exp' => $issuedAt + $this->refreshTokenExpiration,
+            'sub' => $userId,
+        ];
+
+        return $this->jwt::encode($payload, $this->secretkey, $this->alg);
+    }
+
 
     public function verifyJWT($token): bool| array
     {
@@ -41,13 +56,13 @@ class JwtHandler
             $decode = $this->jwt::decode($token, new Firebase\JWT\Key($this->secretkey, $this->alg));
             return (array) $decode;
         } catch (Exception $e) {
-            return false;
+            return ['error'=> 'Invalid token: ' . $e->getMessage()];
         }
     }
 
     public function extractTokenFromHeader($header): null |string
     {
-        $authHeader = $headers['Authorization'] ?? "";
+        $authHeader = $header['Authorization'] ?? "";
 
         $matches = [];
 

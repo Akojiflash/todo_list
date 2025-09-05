@@ -11,7 +11,8 @@ class User
         $this->conn = $conn->getConnection();
     }
 
-    public function createAccount(string $name, string $email, string $password): array {
+    public function createAccount(string $name, string $email, string $password): array
+    {
         $userId = uniqid("user_");
         $sql = "INSERT INTO user (user_id, name, email, password) VALUES (:user_id, :name, :email, :password)";
 
@@ -23,16 +24,16 @@ class User
         $stmt->bindValue(":password", $password, \PDO::PARAM_STR);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
-            return ['user_id' => $userId, 'name'=> $name, 'email'=>$email];
+        if ($stmt->rowCount() > 0) {
+            return ['user_id' => $userId, 'name' => $name, 'email' => $email];
         }
 
         return ['error' => 'Failed to create account'];
-    
     }
 
 
-    public function getUserEmail(string $email):bool{
+    public function getUserEmail(string $email): bool
+    {
 
         $sql = "SELECT * FROM user WHERE email = :email";
 
@@ -42,10 +43,31 @@ class User
 
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return true;
         }
 
         return false;
+    }
+
+
+    public function login(string $email, string $password): array
+    {
+
+        $sql = "SELECT * FROM user WHERE email = :email";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":email", $email, \PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $data =  $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            return ['user_id' => $data['user_id'], 'name' => $data['name'], 'email' => $data['email'], 'password' => $data['password']];
+        }
+
+        return ['error' => 'Account does not exist'];
     }
 }
